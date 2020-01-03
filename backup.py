@@ -1,12 +1,8 @@
-#-*-coding:utf8;-*-
-#qpy:3
-#qpy:console
-
 import tarfile
-import os
+
+from os.path import basename
 from fnmatch import fnmatch
 
-#os.chdir('/sdcard')
 
 EXCLUDE = [
     '*.zip',
@@ -20,25 +16,14 @@ EXCLUDE = [
 ]
 
 
-def basename(source):
-    return os.path.basename(source)
-
-
-def exclude(tarinfo):
-    name = basename(tarinfo.name)
-    if any([fnmatch(name, pat) for pat in EXCLUDE]):
-        print('Skiping {}'.format(name))
-        return None
-    else:
-        print('Adding ' + tarinfo.name)
-        return tarinfo
+def exclude(path):
+    return any(fnmatch(basename(path), p) for p in EXCLUDE)
 
 
 def make_tgz(output_filename, source_dir):
     with tarfile.open(output_filename, "w:gz") as tar: 
         tar.add(
-                source_dir,
-                arcname=os.path.basename(source_dir),
-                filter=exclude
-                )
-
+            source_dir,
+            arcname=basename(source_dir),
+            filter=exclude
+        )
