@@ -26,14 +26,12 @@ def basename(source):
 
 def exclude(tarinfo):
     name = basename(tarinfo.name)
-    matches = (fnmatch(name, pat) for pat in EXCLUDE)
-    for pattern in EXCLUDE_PATTERNS:
-        if fnmatch(name, pattern):
-            print('Skiping ' + name)
-            return
-        
-    print('Adding ' + tarinfo.name)
-    return tarinfo
+    if [fnmatch(name, pat) for pat in EXCLUDE]:
+        print('Skiping {}'.format(name))
+        return None
+    else:
+        print('Adding ' + tarinfo.name)
+        return tarinfo
 
 
 def make_tgz(output_filename, source_dir):
@@ -44,4 +42,3 @@ def make_tgz(output_filename, source_dir):
                 filter=exclude
                 )
 
-make_tgz('qpython.tgz', '/sdcard/qpython')
