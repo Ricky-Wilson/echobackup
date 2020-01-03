@@ -18,15 +18,15 @@ EXCLUDE = [
     '*__pycache__*',
     '*snippets3*'
 ]
-'
 
 
 def basename(source):
     return os.path.basename(source)
 
+
 def exclude(tarinfo):
     name = basename(tarinfo.name)
-    if [fnmatch(name, pat) for pat in EXCLUDE]:
+    if any([fnmatch(name, pat) for pat in EXCLUDE]):
         print('Skiping {}'.format(name))
         return None
     else:
